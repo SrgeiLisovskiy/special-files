@@ -61,26 +61,32 @@ public class Main {
                     .build();
             staff = csv.parse();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Не удается найти указанный файл");
         }
         return staff;
     }
 
     public static String listToJson(List<Employee> list) {
-        GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.setPrettyPrinting().create();
-        Type listType = new TypeToken<List<Employee>>() {
-        }.getType();
+        if (list.isEmpty()) {
+            return null;
+        }
+            GsonBuilder builder = new GsonBuilder();
+            Gson gson = builder.setPrettyPrinting().create();
+            Type listType = new TypeToken<List<Employee>>() {
+            }.getType();
+
         return gson.toJson(list, listType);
     }
 
     public static void writeString(String json, String path) {
-        try (FileWriter writer = new FileWriter(path)) {
-            writer.write(json);
-            writer.flush();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+     if (json!=null) {
+         try (FileWriter writer = new FileWriter(path)) {
+             writer.write(json);
+             writer.flush();
+         } catch (IOException e) {
+             throw new RuntimeException(e.getMessage());
+         }
+     }
     }
 
     public static List<Employee> parseXML(String path) throws ParserConfigurationException, IOException, SAXException {
